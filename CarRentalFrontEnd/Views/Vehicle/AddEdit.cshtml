@@ -1,0 +1,199 @@
+@model CarRentalFrontEnd.Models.VehicleModel
+
+@{
+
+    // Safely filter all dropdown ViewBags
+    var users = (ViewBag.Users as IEnumerable<CarRentalFrontEnd.Models.UserModel>)?
+        .Where(u => u != null && u.UserId > 0 && !string.IsNullOrEmpty(u.Name))
+        .ToList() ?? new List<CarRentalFrontEnd.Models.UserModel>();
+
+    var fuelTypes = (ViewBag.FuelTypes as IEnumerable<CarRentalFrontEnd.Models.FuelTypeModel>)?
+        .Where(f => f != null && f.FuelTypeId > 0 && !string.IsNullOrEmpty(f.FuelName))
+        .ToList() ?? new List<CarRentalFrontEnd.Models.FuelTypeModel>();
+
+    var vehicleTypes = (ViewBag.VehicleTypes as IEnumerable<CarRentalFrontEnd.Models.VehicleTypeModel>)?
+        .Where(v => v != null && v.VehicleTypeId > 0 && !string.IsNullOrEmpty(v.TypeName))
+        .ToList() ?? new List<CarRentalFrontEnd.Models.VehicleTypeModel>();
+}
+
+<div class="dashboard-card mb-4">
+    <div class="card-header">
+        <h2 class="card-title">@(ViewData["PageTitle"])</h2>
+    </div>
+
+    <div class="card-body p-4">
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert alert-danger bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 rounded-3 p-3 mb-4">
+                <i class="fas fa-exclamation-circle me-2"></i>@ViewBag.Error
+            </div>
+        }
+
+        <form method="post" asp-action="AddEdit">
+            <input type="hidden" asp-for="VehicleId" />
+             
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group mb-4">
+                        <label asp-for="UserId" class="form-label text-muted">User</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-dark border-dark text-muted">
+                                <i class="fas fa-user"></i>
+                            </span>
+                            <select asp-for="UserId" class="form-select bg-dark border-dark text-light" asp-items="@(new SelectList(users, "UserId", "Name"))">
+                                <option value="">-- Select User --</option>
+                            </select>
+                        </div>
+                        <span asp-validation-for="UserId" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label asp-for="FuelTypeId" class="form-label text-muted">Fuel Type</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-dark border-dark text-muted">
+                                <i class="fas fa-gas-pump"></i>
+                            </span>
+                            <select asp-for="FuelTypeId" class="form-select bg-dark border-dark text-light" asp-items="@(new SelectList(fuelTypes, "FuelTypeId", "FuelName"))">
+                                <option value="">-- Select Fuel Type --</option>
+                            </select>
+                        </div>
+                        <span asp-validation-for="FuelTypeId" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label asp-for="VehicleTypeId" class="form-label text-muted">Vehicle Type</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-dark border-dark text-muted">
+                                <i class="fas fa-car-side"></i>
+                            </span>
+                            <select asp-for="VehicleTypeId" class="form-select bg-dark border-dark text-light" asp-items="@(new SelectList(vehicleTypes, "VehicleTypeId", "TypeName"))">
+                                <option value="">-- Select Vehicle Type --</option>
+                            </select>
+                        </div>
+                        <span asp-validation-for="VehicleTypeId" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label asp-for="Brand" class="form-label text-muted">Brand</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-dark border-dark text-muted">
+                                <i class="fas fa-copyright"></i>
+                            </span>
+                            <input asp-for="Brand" class="form-control bg-dark border-dark text-light" placeholder="Enter brand name" />
+                        </div>
+                        <span asp-validation-for="Brand" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label asp-for="Model" class="form-label text-muted">Model</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-dark border-dark text-muted">
+                                <i class="fas fa-car"></i>
+                            </span>
+                            <input asp-for="Model" class="form-control bg-dark border-dark text-light" placeholder="Enter model name" />
+                        </div>
+                        <span asp-validation-for="Model" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label asp-for="Year" class="form-label text-muted">Year</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-dark border-dark text-muted">
+                                <i class="fas fa-calendar-alt"></i>
+                            </span>
+                            <input asp-for="Year" type="number" class="form-control bg-dark border-dark text-light" placeholder="Enter year" />
+                        </div>
+                        <span asp-validation-for="Year" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group mb-4">
+                        <label asp-for="PlateNumber" class="form-label text-muted">Plate Number</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-dark border-dark text-muted">
+                                <i class="fas fa-id-card"></i>
+                            </span>
+                            <input asp-for="PlateNumber" class="form-control bg-dark border-dark text-light" placeholder="Enter plate number" />
+                        </div>
+                        <span asp-validation-for="PlateNumber" class="text-danger"></span>
+                    </div>
+
+
+
+                    <div class="form-group mb-4">
+                        <label asp-for="Status" class="form-label text-muted">Status</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-dark border-dark text-muted">
+                                <i class="fas fa-info-circle"></i>
+                            </span>
+                            <select asp-for="Status" class="form-select bg-dark border-dark text-light">
+                                <option value="Available">Available</option>
+                                <option value="Unavailable">Unavailable</option>
+                            </select>
+                        </div>
+                        <span asp-validation-for="Status" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label asp-for="Mileage" class="form-label text-muted">Mileage</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-dark border-dark text-muted">
+                                <i class="fas fa-tachometer-alt"></i>
+                            </span>
+                            <input asp-for="Mileage" type="number" step="0.01" class="form-control bg-dark border-dark text-light" placeholder="Enter mileage" />
+                        </div>
+                        <span asp-validation-for="Mileage" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label asp-for="PricePerHour" class="form-label text-muted">Price Per Hour</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-dark border-dark text-muted">
+                                <i class="fas fa-dollar-sign"></i>
+                            </span>
+                            <input asp-for="PricePerHour" type="number" step="0.01" class="form-control bg-dark border-dark text-light" placeholder="Enter hourly rate" />
+                        </div>
+                        <span asp-validation-for="PricePerHour" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label asp-for="PricePerDay" class="form-label text-muted">Price Per Day</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-dark border-dark text-muted">
+                                <i class="fas fa-dollar-sign"></i>
+                            </span>
+                            <input asp-for="PricePerDay" type="number" step="0.01" class="form-control bg-dark border-dark text-light" placeholder="Enter daily rate" />
+                        </div>
+                        <span asp-validation-for="PricePerDay" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group mb-4">
+                <label asp-for="ConditionNote" class="form-label text-muted">Condition Note</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-dark border-dark text-muted">
+                        <i class="fas fa-sticky-note"></i>
+                    </span>
+                    <textarea asp-for="ConditionNote" class="form-control bg-dark border-dark text-light" rows="3" placeholder="Enter any notes about the vehicle's condition"></textarea>
+                </div>
+                <span asp-validation-for="ConditionNote" class="text-danger"></span>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mt-4">
+                <a asp-action="Index" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Back to List
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save me-2"></i>Save Vehicle
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <!-- Form validations are now handled by form-validations.js -->
+}

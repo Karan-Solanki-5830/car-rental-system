@@ -1,0 +1,165 @@
+@model CarRentalFrontEnd.Models.UserModel
+
+
+<div class="dashboard-card mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h2 class="card-title">@(ViewData["PageTitle"])</h2>
+    </div>
+    <div class="card-body p-4">
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 rounded-3 p-3 mb-4">
+                <i class="fas fa-exclamation-circle me-2"></i>@TempData["ErrorMessage"]
+            </div>
+        }
+        @if (ViewBag.ErrorDetails != null)
+        {
+            <div class="alert alert-warning bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25 rounded-3 p-3 mb-4">
+                <i class="fas fa-exclamation-triangle me-2"></i>@ViewBag.ErrorDetails
+            </div>
+        }
+
+        <form method="post" asp-action="AddEdit" enctype="multipart/form-data">
+            <input type="hidden" asp-for="UserId" />
+            <input type="hidden" asp-for="Created" />
+            <input type="hidden" asp-for="Modified" />
+            <input type="hidden" asp-for="ProfileImagePath" />
+
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="form-group">
+                        <label asp-for="Name" class="form-label text-white-50 mb-2">Name</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-dark border-dark text-white-50">
+                                <i class="fas fa-user"></i>
+                            </span>
+                            <input asp-for="Name" class="form-control bg-dark border-dark text-white" placeholder="Enter name" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-4">
+                    <div class="form-group">
+                        <label asp-for="Email" class="form-label text-white-50 mb-2">Email</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-dark border-dark text-white-50">
+                                <i class="fas fa-envelope"></i>
+                            </span>
+                            <input asp-for="Email" class="form-control bg-dark border-dark text-white" placeholder="Enter email" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="form-group">
+                        <label asp-for="Password" class="form-label text-white-50 mb-2">Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-dark border-dark text-white-50">
+                                <i class="fas fa-lock"></i>
+                            </span>
+                            <input asp-for="Password" class="form-control bg-dark border-dark text-white" placeholder="Enter password" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-4">
+                    <div class="form-group">
+                        <label asp-for="Phone" class="form-label text-white-50 mb-2">Phone</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-dark border-dark text-white-50">
+                                <i class="fas fa-phone"></i>
+                            </span>
+                            <input asp-for="Phone" class="form-control bg-dark border-dark text-white" placeholder="Enter phone number" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="form-group">
+                        <label asp-for="Role" class="form-label text-white-50 mb-2">Role</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-dark border-dark text-white-50">
+                                <i class="fas fa-user-tag"></i>
+                            </span>
+                            <select asp-for="Role" class="form-select bg-dark border-dark text-white">
+                                <option value="Customer">Customer</option>
+                                <option value="Admin">Admin</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 mb-4">
+                    <div class="form-group">
+                        <label asp-for="ProfileImage" class="form-label text-white-50 mb-2">Profile Image</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-dark border-dark text-white-50">
+                                <i class="fas fa-image"></i>
+                            </span>
+                            <input asp-for="ProfileImage" type="file" class="form-control bg-dark border-dark text-white" accept="image/*" />
+                        </div>
+                        @if (!string.IsNullOrEmpty(Model.ProfileImagePath))
+                        {
+                            <div class="mt-2">
+                                <small class="text-white-50">Current image:</small>
+                                @{ var currentImageUrl = $"http://localhost:5075/{Model.ProfileImagePath}"; }
+                                <img src="@currentImageUrl" alt="Current profile" class="rounded-circle ms-2" style="width: 40px; height: 40px; object-fit: cover;" />
+                                <button type="button" class="btn btn-sm btn-outline-danger ms-2" onclick="deleteProfileImage()">
+                                    <i class="fas fa-trash"></i> Remove
+                                </button>
+                            </div>
+                        }
+                        <div class="mt-2" id="imagePreviewContainer" style="display: none;">
+                            <small class="text-white-50">Preview:</small>
+                            <img id="imagePreview" alt="Preview" class="rounded-circle ms-2" style="width: 40px; height: 40px; object-fit: cover;" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex gap-3 mt-4">
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-save me-2"></i>Save
+                </button>
+                <a class="btn btn-outline" asp-action="Index">
+                    <i class="fas fa-times me-2"></i>Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Delete profile image function - kept as it's specific to this page
+        function deleteProfileImage() {
+            if (confirm('Are you sure you want to remove the profile image?')) {
+                const userId = document.getElementById('UserId').value;
+                if (userId && userId !== '0') {
+                    fetch(`/User/DeleteProfileImage/${userId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        }
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            location.reload();
+                        } else {
+                            alert('Failed to delete profile image');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Failed to delete profile image');
+                    });
+                }
+            }
+        }
+    </script>
+}

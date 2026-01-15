@@ -1,0 +1,121 @@
+﻿@model CarRentalFrontEnd.Models.PaymentModel
+
+@{
+    ViewBag.Title = Model.PaymentId == 0 ? "Add Payment" : "Edit Payment";
+}
+
+<div class="dashboard-card mb-4">
+    <div class="card-header">
+        <h2 class="card-title">@ViewBag.Title</h2>
+    </div>
+
+    <div class="card-body p-4">
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success bg-success bg-opacity-10 text-success border border-success border-opacity-25 rounded-3 p-3 mb-4">
+                <i class="fas fa-check-circle me-2"></i>@TempData["SuccessMessage"]
+            </div>
+        }
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 rounded-3 p-3 mb-4">
+                <i class="fas fa-exclamation-circle me-2"></i>@TempData["ErrorMessage"]
+            </div>
+        }
+
+        <form asp-action="AddEdit" method="post">
+            <input type="hidden" asp-for="PaymentId" />
+            <input type="hidden" asp-for="Created" />
+            <input type="hidden" asp-for="Modified" />
+
+            <!-- Booking Dropdown -->
+            <div class="form-group mb-4">
+                <label asp-for="BookingId" class="form-label text-muted">Booking</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-dark border-dark text-muted">
+                        <i class="fas fa-book"></i>
+                    </span>
+                    <select asp-for="BookingId" class="form-select bg-dark border-dark text-light" asp-items="ViewBag.Bookings">
+                        <option value="">-- Select Booking --</option>
+                    </select>
+                </div>
+                <span asp-validation-for="BookingId" class="text-danger"></span>
+            </div>
+
+            <!-- User Dropdown -->
+            <div class="form-group mb-4">
+                <label asp-for="UserId" class="form-label text-muted">User</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-dark border-dark text-muted">
+                        <i class="fas fa-user"></i>
+                    </span>
+                    <select asp-for="UserId" class="form-select bg-dark border-dark text-light" asp-items="ViewBag.Users">
+                        <option value="">-- Select User --</option>
+                    </select>
+                </div>
+                <span asp-validation-for="UserId" class="text-danger"></span>
+            </div>
+
+            <!-- Amount -->
+            <div class="form-group mb-4">
+                <label asp-for="Amount" class="form-label text-muted">Amount</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-dark border-dark text-muted">
+                        <i class="fas fa-dollar-sign"></i>
+                    </span>
+                    <input asp-for="Amount" type="number" step="0.01" class="form-control bg-dark border-dark text-light" placeholder="Enter payment amount" />
+                </div>
+                <span asp-validation-for="Amount" class="text-danger"></span>
+            </div>
+
+            <!-- Payment Method -->
+            <div class="form-group mb-4">
+                <label asp-for="PaymentMethod" class="form-label text-muted">Payment Method</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-dark border-dark text-muted">
+                        <i class="fas fa-credit-card"></i>
+                    </span>
+                    <input asp-for="PaymentMethod" class="form-control bg-dark border-dark text-light" placeholder="e.g. Cash, UPI, Credit Card" />
+                </div>
+                <span asp-validation-for="PaymentMethod" class="text-danger"></span>
+            </div>
+
+            <!-- Payment Date -->
+            <div class="form-group mb-4">
+                <label asp-for="PaymentDate" class="form-label text-muted">Payment Date</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-dark border-dark text-muted">
+                        <i class="fas fa-calendar-day"></i>
+                    </span>
+                    <input asp-for="PaymentDate" type="datetime-local" class="form-control bg-dark border-dark text-light" />
+                </div>
+                <span asp-validation-for="PaymentDate" class="text-danger"></span>
+            </div>
+
+            <!-- Remarks -->
+            <div class="form-group mb-4">
+                <label asp-for="Remarks" class="form-label text-muted">Remarks</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-dark border-dark text-muted">
+                        <i class="fas fa-comment-dots"></i>
+                    </span>
+                    <textarea asp-for="Remarks" class="form-control bg-dark border-dark text-light" rows="3" placeholder="Additional remarks (optional)"></textarea>
+                </div>
+                <span asp-validation-for="Remarks" class="text-danger"></span>
+            </div>
+
+            <div class="d-flex gap-2 mt-4">
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-save me-2"></i>Save
+                </button>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Back
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

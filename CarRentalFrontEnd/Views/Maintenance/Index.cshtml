@@ -1,0 +1,111 @@
+@model IEnumerable<CarRentalFrontEnd.Models.MaintenanceModel>
+
+@{
+    var isAdmin = User.IsInRole("Admin");
+}
+
+<div class="dashboard-card mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h2 class="card-title">@(ViewData["PageTitle"])</h2>
+        @if (isAdmin) {
+            <a class="btn btn-success" asp-action="AddEdit">
+                <i class="fas fa-plus me-2"></i>Add Maintenance
+            </a>
+        }
+    </div>
+    
+    <div class="card-body p-4">
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success bg-success bg-opacity-10 text-success border border-success border-opacity-25 rounded-3 p-3 mb-4">
+                <i class="fas fa-check-circle me-2"></i>@TempData["SuccessMessage"]
+            </div>
+        }
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 rounded-3 p-3 mb-4">
+                <i class="fas fa-exclamation-circle me-2"></i>@TempData["ErrorMessage"]
+            </div>
+        }
+
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Vehicle</th>
+                        <th>User</th>
+                        <th>Description</th>
+                        <th>Service Date</th>
+                        <th>Cost</th>
+                        <th>Created</th>
+                        @if (isAdmin) { <th>Actions</th>; }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var log in Model)
+                    {
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-hashtag text-muted me-2"></i>
+                                    <span>@log.LogId</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-car text-muted me-2"></i>
+                                    <span>@log.VehicleId</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-user text-muted me-2"></i>
+                                    <span>@log.UserId</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-tools text-muted me-2"></i>
+                                    <span>@log.Description</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-calendar-day text-muted me-2"></i>
+                                    <span>@log.ServiceDate.ToString("yyyy-MM-dd HH:mm")</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <span>@log.Cost</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-calendar-alt text-muted me-2"></i>
+                                    <span>@(log.Created?.ToString("yyyy-MM-dd HH:mm") ?? "-")</span>
+                                </div>
+                            </td>
+                            @if (isAdmin) {
+                                <td>
+                                    <div class="d-flex gap-2">
+                                        <a asp-action="AddEdit" asp-route-id="@log.LogId" 
+                                           class="btn btn-sm" style="background: rgba(245, 158, 11, 0.2); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3);">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@log.LogId" 
+                                           onclick="return confirm('Are you sure you want to delete this maintenance log?');"
+                                           class="btn btn-sm" style="background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3);">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

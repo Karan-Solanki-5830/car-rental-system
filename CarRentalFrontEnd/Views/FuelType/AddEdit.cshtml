@@ -1,0 +1,70 @@
+@model CarRentalFrontEnd.Models.FuelTypeModel
+@using Microsoft.AspNetCore.Mvc.Rendering
+@{
+    ViewData["Title"] = Model.FuelTypeId == 0 ? "Add Fuel Type" : "Edit Fuel Type";
+}
+
+<div class="dashboard-card mb-4">
+    <div class="card-header">
+        <h2 class="card-title">@ViewData["Title"]</h2>
+    </div>
+    
+    <div class="card-body p-4">
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success bg-success bg-opacity-10 text-success border border-success border-opacity-25 rounded-3 p-3 mb-4">
+                <i class="fas fa-check-circle me-2"></i>@TempData["SuccessMessage"]
+            </div>
+        }
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 rounded-3 p-3 mb-4">
+                <i class="fas fa-exclamation-circle me-2"></i>@TempData["ErrorMessage"]
+            </div>
+        }
+
+        <form method="post" asp-action="AddEdit">
+            <input type="hidden" asp-for="FuelTypeId" />
+            <input type="hidden" asp-for="Created" />
+            <input type="hidden" asp-for="Modified" />
+
+            <div class="form-group mb-4">
+                <label asp-for="FuelName" class="form-label text-muted">Fuel Name</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-dark border-dark text-muted">
+                        <i class="fas fa-gas-pump"></i>
+                    </span>
+                    <input asp-for="FuelName" class="form-control bg-dark border-dark text-light" placeholder="Enter fuel name" />
+                </div>
+                <span asp-validation-for="FuelName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-4">
+                <label asp-for="UserId" class="form-label text-muted">User</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-dark border-dark text-muted">
+                        <i class="fas fa-user"></i>
+                    </span>
+                    <select asp-for="UserId" class="form-select bg-dark border-dark text-light"
+                            asp-items="@(new SelectList((List<CarRentalFrontEnd.Models.UserDropdownModel>)ViewBag.Users, "UserId", "Name", Model.UserId))">
+                        <option value="">-- Select User --</option>
+                    </select>
+                </div>
+                <span asp-validation-for="UserId" class="text-danger"></span>
+            </div>
+
+            <div class="d-flex gap-2 mt-4">
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-save me-2"></i>Save
+                </button>
+                <a class="btn btn-secondary" asp-action="Index">
+                    <i class="fas fa-arrow-left me-2"></i>Back
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

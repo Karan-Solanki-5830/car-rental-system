@@ -1,0 +1,115 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Cental - Book a Car</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- Icon Fonts -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="~/lib/animate/animate.min.css" rel="stylesheet">
+    <link href="~/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+
+    <!-- Bootstrap & Custom CSS -->
+    <link href="~/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/css/style.css" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Spinner Start -->
+    <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+    <!-- Spinner End -->
+    <!-- Header Start -->
+    <div class="container-fluid bg-breadcrumb">
+        <div class="container text-center py-5">
+            <h1 class="display-4 text-white">Book Your Ride</h1>
+            <ol class="breadcrumb justify-content-center mb-0">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item active text-primary">Booking</li>
+            </ol>
+        </div>
+    </div>
+    <!-- Header End -->
+    <!-- Booking Form Start -->
+    <div class="container-fluid py-5">
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 wow fadeInUp" data-wow-delay="0.2s">
+                    <div class="bg-light rounded p-5">
+                        <h2 class="text-center mb-4">Fill Your Booking Details</h2>
+                        <form method="post" asp-action="InsertBooking" asp-controller="BookingController">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="CustomerId" class="form-label">Customer ID</label>
+                                    <input type="number" class="form-control" name="CustomerId" required />
+                                </div>
+                          
+                                <div class="col-md-6">
+                                    <label for="VehicleId" class="form-label">Vehicle ID</label>
+                                    <input type="number" class="form-control" name="VehicleId" required />
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="Status" class="form-label">Status</label>
+                                    <select class="form-select" name="Status" required>
+                                        <option value="">-- Select Status --</option>
+                                        <option value="Pending">Pending</option>
+                                        <option value="Confirmed">Confirmed</option>
+                                        <option value="Cancelled">Cancelled</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="StartDateTime" class="form-label">Start Date & Time</label>
+                                    <input type="datetime-local" class="form-control" name="StartDateTime" required />
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="EndDateTime" class="form-label">End Date & Time</label>
+                                    <input type="datetime-local" class="form-control" name="EndDateTime" required />
+                                </div>
+                                <div class="col-12 text-center">
+                                    <button class="btn btn-primary rounded-pill py-3 px-5 mt-3" type="submit">Book Now</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Booking Form End -->
+    <!-- Footer Start -->
+    <div class="container-fluid footer py-5">
+        <div class="container py-5 text-center text-white">
+            <p>&copy; 2025 Cental. All rights reserved.</p>
+        </div>
+    </div>
+    <!-- Footer End -->
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-secondary btn-lg-square rounded-circle back-to-top"><i class="fa fa-arrow-up"></i></a>
+
+    <!-- JS Libraries -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/wow/wow.min.js"></script>
+    <script src="~/lib/easing/easing.min.js"></script>
+    <script src="~/lib/waypoints/waypoints.min.js"></script>
+    <script src="~/lib/counterup/counterup.min.js"></script>
+    <script src="~/lib/owlcarousel/owl.carousel.min.js"></script>
+
+    <!-- Custom JS -->
+    <script src="~/js/main.js"></script>
+</body>
+
+</html>

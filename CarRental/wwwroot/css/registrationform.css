@@ -1,0 +1,112 @@
+﻿/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Full page background */
+body {
+    background: linear-gradient(to right, #fff 50%, #ff3d3d 50%);
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Section container */
+.register-section {
+    display: flex;
+    width: 90%;
+    max-width: 1100px;
+    background-color: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+}
+
+/* Left - Registration Form */
+.register-left {
+    flex: 1;
+    padding: 40px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.register-form {
+    width: 100%;
+    max-width: 400px;
+}
+
+    .register-form h2 {
+        color: #111;
+        margin-bottom: 25px;
+        font-weight: 600;
+        font-size: 24px;
+        text-align: center;
+    }
+
+    .register-form input,
+    .register-form select {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 18px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        outline: none;
+        font-size: 14px;
+        transition: 0.3s;
+    }
+
+        .register-form input:focus,
+        .register-form select:focus {
+            border-color: #ff3d3d;
+            box-shadow: 0 0 6px rgba(255, 61, 61, 0.3);
+        }
+
+    /* Button */
+    .register-form button {
+        width: 100%;
+        padding: 12px;
+        background-color: #ff3d3d;
+        border: none;
+        color: white;
+        font-weight: bold;
+        font-size: 15px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+        .register-form button:hover {
+            background-color: #e63232;
+        }
+
+/* Login link */
+.login-link {
+    text-align: center;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+    .login-link a {
+        color: #ff3d3d;
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+/* Right - Image */
+.register-right {
+    flex: 1;
+    background-color: #ff3d3d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .register-right img {
+        max-width: 90%;
+        height: auto;
+    }

@@ -1,0 +1,138 @@
+@model CarRentalFrontEnd.Models.AgreementModel
+
+@{
+    ViewBag.Title = Model.AgreementId == 0 ? "Add Agreement" : "Edit Agreement";
+}
+
+<div class="dashboard-card mb-4">
+    <div class="card-header">
+        <h2 class="card-title">@ViewBag.Title</h2>
+    </div>
+    
+    <div class="card-body p-4">
+        @if (ViewBag.ErrorMessage != null)
+        {
+            <div class="alert alert-danger bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 rounded-3 p-3 mb-4">
+                <i class="fas fa-exclamation-circle me-2"></i>@ViewBag.ErrorMessage
+            </div>
+        }
+
+        <form method="post" asp-action="AddEdit">
+            <input type="hidden" asp-for="AgreementId" />
+            <input type="hidden" asp-for="Created" />
+            <input type="hidden" asp-for="Modified" />
+
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <label asp-for="CustomerId" class="form-label text-muted">Customer</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-dark border-secondary"><i class="fas fa-user text-muted"></i></span>
+                        <select asp-for="CustomerId" class="form-control bg-dark text-light border-secondary" id="CustomerDropdown" asp-items="ViewBag.Customers">
+                            <option value="">-- Select Customer --</option>
+                        </select>
+                    </div>
+                    <span asp-validation-for="CustomerId" class="text-danger small mt-1"></span>
+                </div>
+
+                <div class="col-md-6 mb-4">
+                    <label asp-for="BookingId" class="form-label text-muted">Booking</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-dark border-secondary"><i class="fas fa-book text-muted"></i></span>
+                        <select asp-for="BookingId" class="form-control bg-dark text-light border-secondary" id="BookingDropdown">
+                            <option value="">-- Select Booking --</option>
+                        </select>
+                    </div>
+                    <span asp-validation-for="BookingId" class="text-danger small mt-1"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <label asp-for="AgreementDate" class="form-label text-muted">Agreement Date</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-dark border-secondary"><i class="fas fa-calendar-alt text-muted"></i></span>
+                        <input asp-for="AgreementDate" class="form-control bg-dark text-light border-secondary" type="datetime-local" />
+                    </div>
+                    <span asp-validation-for="AgreementDate" class="text-danger small mt-1"></span>
+                </div>
+
+                <div class="col-md-6 mb-4">
+                    <label asp-for="AgreementPdfpath" class="form-label text-muted">PDF Path</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-dark border-secondary"><i class="fas fa-file-pdf text-muted"></i></span>
+                        <input asp-for="AgreementPdfpath" class="form-control bg-dark text-light border-secondary" />
+                    </div>
+                    <span asp-validation-for="AgreementPdfpath" class="text-danger small mt-1"></span>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <div class="form-check">
+                    <input asp-for="TermsAccepted" class="form-check-input" type="checkbox" />
+                    <label asp-for="TermsAccepted" class="form-check-label text-muted">Terms Accepted</label>
+                </div>
+            </div>
+
+            <div class="d-flex gap-2 mt-4">
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-save me-2"></i>Save
+                </button>
+                <a class="btn btn-secondary" href="@Url.Action("Index")">
+                    <i class="fas fa-arrow-left me-2"></i>Back
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function () {
+            var initialCustomerId = '@Model.CustomerId';
+            var initialBookingId = '@Model.BookingId';
+
+            function loadBookings(customerId, selectedBookingId) {
+                var bookingDropdown = $('#BookingDropdown');
+                
+                if (!customerId) {
+                    bookingDropdown.empty().append('<option value="">-- Select Booking --</option>').val('');
+                    return;
+                }
+
+                bookingDropdown.empty().append('<option value="">Loading...</option>');
+
+                $.ajax({
+                    url: '@Url.Action("GetBookingsByCustomer", "Agreement")?customerId=' + customerId,
+                    method: 'GET',
+                    success: function (data) {
+                        bookingDropdown.empty().append('<option value="">-- Select Booking --</option>');
+                        $.each(data, function (i, booking) {
+                            var option = $('<option></option>').val(booking.bookingId).text(booking.display);
+                            if (booking.bookingId == selectedBookingId) {
+                                option.prop('selected', true);
+                            }
+                            bookingDropdown.append(option);
+                        });
+                        // Ensure the initial value is set if it exists
+                        if (selectedBookingId) {
+                            bookingDropdown.val(selectedBookingId);
+                        }
+                    },
+                    error: function () {
+                        bookingDropdown.empty().append('<option value="">Error loading bookings</option>');
+                    }
+                });
+            }
+
+            $('#CustomerDropdown').change(function () {
+                var customerId = $(this).val();
+                loadBookings(customerId, null);
+            });
+
+            if (initialCustomerId && initialBookingId > 0) {
+                loadBookings(initialCustomerId, initialBookingId);
+            }
+        });
+    </script>
+}

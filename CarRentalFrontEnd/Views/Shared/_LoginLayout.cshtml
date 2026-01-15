@@ -1,0 +1,62 @@
+@{
+    var title = ViewData["Title"] as string ?? "Login";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@title - Rentable</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="~/css/login-dark.css" />
+
+    @RenderSection("Styles", required: false)
+
+    <!-- Meta tags for better SEO and performance -->
+    <meta name="description" content="Sign in to your Rentable account securely">
+    <meta name="theme-color" content="#0a0a0a">
+    <meta name="robots" content="noindex, nofollow">
+</head>
+<body>
+    <!-- Header -->
+    <div>
+        <a href="/" aria-label="Go to homepage">
+            <span>Rentable</span>
+        </a>
+    </div>
+
+    <!-- Main Content -->
+    <div>
+        @RenderBody()
+
+        <!-- Footer -->
+        <div>
+            &copy; @DateTime.Now.Year Rentable — Secure Access
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    @RenderSection("Scripts", required: false)
+
+    <!-- Add some smooth scrolling and performance improvements -->
+    <script>
+        // Smooth scrolling for better UX
+        document.documentElement.style.scrollBehavior = 'smooth';
+
+        // Improve loading performance
+        window.addEventListener('load', function() {
+            document.body.classList.add('loaded');
+        });
+    </script>
+</body>
+</html>

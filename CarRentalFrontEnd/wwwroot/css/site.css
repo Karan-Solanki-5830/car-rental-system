@@ -1,0 +1,68 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+/* Profile Image Upload Styles */
+.profile-image-upload {
+  position: relative;
+  display: inline-block;
+}
+
+.profile-image-upload input[type="file"] {
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.profile-image-preview {
+  border: 2px dashed #6c757d;
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(108, 117, 125, 0.1);
+  transition: all 0.3s ease;
+}
+
+.profile-image-preview:hover {
+  border-color: #007bff;
+  background-color: rgba(0, 123, 255, 0.1);
+}
+
+.profile-image-preview img {
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.user-avatar {
+  position: relative;
+}
+
+.user-avatar img {
+  transition: transform 0.2s ease;
+}
+
+.user-avatar:hover img {
+  transform: scale(1.1);
+}

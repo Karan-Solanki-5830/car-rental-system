@@ -1,0 +1,462 @@
+@using System.Security.Claims
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Car Rental Dashboard</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Sidebar.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Dashboard.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Roboto+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    @RenderSection("Styles", required: false) 
+    
+    <style>
+        /* Navbar Styling */
+        .top-navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1.5rem;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .navbar-left, .navbar-center, .navbar-right {
+            display: flex;
+            align-items: center;
+        }
+        
+        /* Sidebar Toggle */
+        .sidebar-toggle {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.25rem;
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+        
+        .sidebar-toggle:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+        }
+        
+        /* Quick Actions Buttons */
+        .quick-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-right: 1.5rem;
+            align-items: center;
+        }
+
+        .quick-actions .btn {
+            padding: 0.4rem 1rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #e2e8f0;
+            background: rgba(30, 41, 59, 0.8);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .quick-actions .btn:hover {
+            background: rgba(51, 65, 85, 0.9);
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .quick-actions .btn:active {
+            transform: translateY(0);
+            background: rgba(30, 41, 59, 0.95);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .quick-actions .btn i {
+            margin-right: 0.5rem;
+            font-size: 0.9rem;
+            transition: transform 0.2s ease;
+            color: #94a3b8;
+        }
+
+        .quick-actions .btn:hover i {
+            transform: translateX(2px);
+            color: #e2e8f0;
+        }
+
+        /* Button Variations */
+        .quick-actions .btn-outline-primary {
+            background: rgba(30, 41, 59, 0.8);
+            border-color: rgba(99, 102, 241, 0.6);
+            color: #a5b4fc;
+        }
+
+        .quick-actions .btn-outline-primary:hover {
+            background: rgba(55, 48, 163, 0.9);
+            border-color: #818cf8;
+            color: #e0e7ff;
+        }
+
+        .quick-actions .btn-outline-info {
+            background: rgba(30, 41, 59, 0.8);
+            border-color: rgba(14, 165, 233, 0.6);
+            color: #7dd3fc;
+        }
+
+        .quick-actions .btn-outline-info:hover {
+            background: rgba(8, 145, 178, 0.9);
+            border-color: #22d3ee;
+            color: #e0f2fe;
+        }
+        
+        /* Search Bar */
+        .search-container {
+            position: relative;
+            width: 300px;
+            max-width: 100%;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 0.5rem 1rem 0.5rem 2.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Dropdown Menus */
+        .dropdown-menu {
+            background: var(--bg-secondary);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 0.5rem 0;
+            min-width: 200px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        .dropdown-item {
+            color: var(--text-secondary);
+            padding: 0.5rem 1.25rem;
+            font-size: 0.9rem;
+            transition: all 0.15s ease;
+            display: flex;
+            align-items: center;
+        }
+        
+        .dropdown-item i {
+            width: 20px;
+            margin-right: 0.5rem;
+            text-align: center;
+        }
+        
+        .dropdown-item:hover, .dropdown-item:focus {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+        }
+        
+        .dropdown-divider {
+            border-color: rgba(255, 255, 255, 0.05);
+            margin: 0.5rem 0;
+        }
+        
+        /* Responsive Adjustments */
+        @@media (max-width: 1200px) {
+            .search-container {
+                width: 250px;
+            }
+        }
+        
+        @@media (max-width: 992px) {
+            .quick-actions {
+                display: none !important;
+            }
+            
+            .search-container {
+                width: 200px;
+            }
+        }
+        
+        @@media (max-width: 768px) {
+            .search-container {
+                display: none;
+            }
+            
+            .notification-text, .notification-time {
+                white-space: normal;
+            }
+        }
+    </style>
+
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h3 class="brand-title">Rentable</h3>
+            </div>
+
+            <div class="sidebar-menu">
+                <div class="menu-section">
+                    <div class="menu-section-title">Management</div>
+                    <ul>
+                        <li class="menu-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")">
+                            <a href="@Url.Action("Index", "Home")">
+                                <i class="fas fa-home"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="menu-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Vehicle" ? "active" : "")">
+                            <a href="@Url.Action("Index", "Vehicle")">
+                                <i class="fas fa-car"></i>
+                                <span>Vehicles</span>
+                            </a>
+                        </li>
+                        <li class="menu-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Booking" ? "active" : "")">
+                            <a href="@Url.Action("Index", "Booking")">
+                                <i class="fas fa-calendar-check"></i>
+                                <span>Bookings</span>
+                            </a>
+                        </li>
+                        <li class="menu-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Customer" ? "active" : "")">
+                            <a href="@Url.Action("Index", "Customer")">
+                                <i class="fas fa-users"></i>
+                                <span>Customers</span>
+                            </a>
+                        </li>
+                        <li class="menu-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Payment" ? "active" : "")">
+                            <a href="@Url.Action("Index", "Payment")">
+                                <i class="fas fa-credit-card"></i>
+                                <span>Payments</span>
+                            </a>
+                        </li>
+                        <li class="menu-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Maintenance" ? "active" : "")">
+                            <a href="@Url.Action("Index", "Maintenance")">
+                                <i class="fas fa-wrench"></i>
+                                <span>Maintenance</span>
+                            </a>
+                        </li>
+                        <li class="menu-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Agreement" ? "active" : "")">
+                            <a href="@Url.Action("Index", "Agreement")">
+                                <i class="fas fa-file-alt"></i>
+                                <span>Agreement</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="menu-section">
+                    <div class="menu-section-title">Settings</div>
+                    <ul>
+                        <li class="menu-item">
+                            <a href="@Url.Action("Index", "User")">
+                                <i class="fas fa-user-cog"></i>
+                                <span>Users</span>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="@Url.Action("Index", "VehicleType")">
+                                <i class="fas fa-cogs"></i>
+                                <span>Vehicle Types</span>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="@Url.Action("Index", "FuelType")">
+                                <i class="fas fa-gas-pump"></i>
+                                <span>Fuel Types</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+    </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Navigation Bar -->
+        <header class="top-navbar">
+            <div class="navbar-left">
+                <div class="d-flex align-items-center">
+                    <button id="sidebarToggle" class="sidebar-toggle me-3">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1 class="page-title">@(ViewData["Title"] ?? "Dashboard")</h1>
+                </div>
+                
+                <!-- Quick Actions -->
+                <div class="quick-actions ms-3 d-none d-md-flex">
+                    <a href="@Url.Action("AddEdit", "Booking")" class="btn btn-sm btn-outline-primary" style="padding: 0.3rem 0.8rem; font-size: 0.8rem;">
+                        <i class="fas fa-plus me-1"></i> New Booking
+                    </a>
+                    <a href="@Url.Action("AddEdit", "Vehicle")" class="btn btn-sm btn-outline-info" style="padding: 0.3rem 0.8rem; font-size: 0.8rem;">
+                        <i class="fas fa-car me-1"></i> Add Vehicle
+                    </a>
+                </div>
+            </div>
+            
+            <div class="navbar-center">
+                <!-- Search Bar -->
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-input" placeholder="Search vehicles, customers, bookings...">
+                </div>
+            </div>
+            
+            <div class="navbar-right">
+                <!-- Logout Button -->
+                <div class="me-3">
+                    <form asp-controller="Login_Register" asp-action="Logout" method="post" class="d-inline">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-outline-danger btn-sm d-flex align-items-center" style="border-radius: 20px; padding: 0.4rem 1rem;">
+                            <i class="fas fa-sign-out-alt me-2"></i>
+                            <span>Logout</span>
+                        </button>
+                    </form>
+                </div>
+                
+                <!-- User Profile -->
+                @{ 
+                    var displayName = User.Identity?.Name ?? "User";
+                    var displayRole = User.FindFirst(ClaimTypes.Role)?.Value ?? "User";
+                    var userInitial = displayName.Length > 0 ? displayName[0].ToString().ToUpper() : "U";
+                }
+                <div class="dropdown">
+                    <button class="btn btn-link nav-link d-flex align-items-center" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <div class="user-avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 36px; height: 36px; font-size: 0.9rem; background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);">
+                            @userInitial
+                        </div>
+                        <div class="d-none d-md-flex flex-column align-items-start">
+                            <span class="fw-medium">@displayName</span>
+                            <small class="text-muted text-uppercase" style="font-size: 0.65rem;">@displayRole</small>
+                        </div>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center gap-2" href="@Url.Action("Register","Login_Register")" style="color:var(--text-secondary);padding:0.6rem 1rem;transition:0.2s ease;font-size:13px;border-radius:6px;margin:0 0.5rem">
+                                <i class="fas fa-user-plus" style="color:var(--accent-green);width:16px;font-size:13px"></i>
+                                Create Account
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </header>
+
+        <div class="content-wrapper">
+            @RenderBody()
+        </div>
+
+        <!-- Footer -->
+        <footer class="main-footer">
+            <div class="footer-content">
+                <div class="footer-left">
+                    <p>&copy; 2024 Car Rental Dashboard. All rights reserved.</p>
+                </div>
+                <div class="footer-right">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Support</a>
+                </div>
+            </div>
+        </footer>
+    </main>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Enhanced Dashboard Script -->
+    <script>
+        // Theme toggle functionality removed as requested
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Bootstrap dropdowns manually
+            const dropdownElementList = document.querySelectorAll('[data-bs-toggle="dropdown"]');
+            const dropdownList = [...dropdownElementList].map(dropdownToggleEl => new bootstrap.Dropdown(dropdownToggleEl));
+            
+            // Add click handlers for div elements acting as dropdown toggles
+            dropdownElementList.forEach(function(element) {
+                if (element.tagName === 'DIV') {
+                    element.style.cursor = 'pointer';
+                    element.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        const dropdown = bootstrap.Dropdown.getInstance(this) || new bootstrap.Dropdown(this);
+                        dropdown.toggle();
+                    });
+                    
+                    // Add keyboard support
+                    element.addEventListener('keydown', function(e) {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            this.click();
+                        }
+                    });
+                }
+            });
+        });
+        document.addEventListener('DOMContentLoaded', function() {
+            // Smooth scrolling for content
+            const contentWrapper = document.querySelector('.content-wrapper');
+            if (contentWrapper) {
+                contentWrapper.style.scrollBehavior = 'smooth';
+            }
+
+            // Enhanced card interactions
+            const cards = document.querySelectorAll('.dashboard-card, .stat-card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-2px)';
+                });
+
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+        });
+
+        // Smooth scroll enhancement for content wrapper
+        const contentWrapper = document.querySelector('.content-wrapper');
+        if (contentWrapper) {
+            contentWrapper.style.scrollBehavior = 'smooth';
+        }
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="~/js/form-validations.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

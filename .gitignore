@@ -1,0 +1,21 @@
+# Build outputs (backend & frontend)
+bin/
+obj/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Local environment files
+appsettings.Development.json
+
+# Documents (do not upload)
+*.ppt
+*.pptx
+*.doc
+*.docx
+
+# OS files
+Thumbs.db
+.DS_Store

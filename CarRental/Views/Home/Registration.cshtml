@@ -1,0 +1,43 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Registration</title>
+    <link rel="stylesheet" href="~/css/registrationform.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <section class="register-section">
+        <div class="register-left">
+            <div class="register-form">
+                <h2>Create your account</h2>
+                <form method="post" action="/User/Register">
+                    <input type="text" name="Name" placeholder="Full Name" required>
+                    <input type="email" name="Email" placeholder="Email Address" required>
+                    <input type="password" name="Password" placeholder="Password" required>
+                    <input type="tel" name="Phone" placeholder="Phone Number" required>
+
+                    <select name="Role" required>
+                        <option value="" disabled selected>Select Role</option>
+                        <option value="Admin">Admin</option>
+                        <option value="Customer">Customer</option>
+                        <option value="Manager">Manager</option>
+                    </select>
+
+                    <button type="submit">Register</button>
+                </form>
+                <div class="login-link">
+                    Already have an account? <a href="/Home/Login">Login here</a>
+                </div>
+            </div>
+        </div>
+        <div class="register-right">
+            <img src="https://i.ibb.co/0qP3SxY/yellow-car.png" alt="Car Image" />
+        </div>
+    </section>
+</body>
+</html>

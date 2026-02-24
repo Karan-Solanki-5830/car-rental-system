@@ -5,8 +5,7 @@ using System.Text.Json.Serialization;
 
 public partial class MaintenanceLog
 {
-    public int LogId { get; set; }
-
+    public int Id { get; set; }
     public int VehicleId { get; set; }
 
     public int UserId { get; set; }

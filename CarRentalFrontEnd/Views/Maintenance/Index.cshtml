@@ -49,7 +49,7 @@
                             <td>
                                 <div class="d-flex align-items-center">
                                     <i class="fas fa-hashtag text-muted me-2"></i>
-                                    <span>@log.LogId</span>
+                                    <span>@log.Id</span>
                                 </div>
                             </td>
                             <td>
@@ -90,11 +90,11 @@
                             @if (isAdmin) {
                                 <td>
                                     <div class="d-flex gap-2">
-                                        <a asp-action="AddEdit" asp-route-id="@log.LogId" 
+                                        <a asp-action="AddEdit" asp-route-id="@log.Id" 
                                            class="btn btn-sm" style="background: rgba(245, 158, 11, 0.2); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3);">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <a asp-action="Delete" asp-route-id="@log.LogId" 
+                                        <a asp-action="Delete" asp-route-id="@log.Id" 
                                            onclick="return confirm('Are you sure you want to delete this maintenance log?');"
                                            class="btn btn-sm" style="background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3);">
                                             <i class="fas fa-trash-alt"></i>

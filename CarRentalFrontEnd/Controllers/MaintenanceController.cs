@@ -92,14 +92,14 @@ namespace CarRentalFrontEnd.Controllers
 
             HttpResponseMessage response;
 
-            if (maintenance.LogId == 0)
+            if (maintenance.Id == 0)
                 response = await client.PostAsync("MaintenanceLog", content);
             else
-                response = await client.PutAsync($"MaintenanceLog/{maintenance.LogId}", content);
+                response = await client.PutAsync($"MaintenanceLog/{maintenance.Id}", content);
 
             if (response.IsSuccessStatusCode)
             {
-                TempData["SuccessMessage"] = maintenance.LogId == 0
+                TempData["SuccessMessage"] = maintenance.Id == 0
                     ? "Maintenance record created successfully!"
                     : "Maintenance record updated successfully!";
                 return RedirectToAction("Index");

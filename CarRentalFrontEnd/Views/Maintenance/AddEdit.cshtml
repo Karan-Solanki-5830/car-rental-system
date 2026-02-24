@@ -1,12 +1,12 @@
 @model CarRentalFrontEnd.Models.MaintenanceModel
 
 @{
-    ViewBag.Title = Model.LogId == 0 ? "Add Maintenance Log" : "Edit Maintenance Log";
+    ViewBag.Title = Model.Id == 0 ? "Add Maintenance Log" : "Edit Maintenance Log";
 }
 
 <div class="dashboard-card mb-4">
     <div class="card-header">
-        <h2 class="card-title">@(Model.LogId == 0 ? "Add" : "Edit") Maintenance Log</h2>
+        <h2 class="card-title">@(Model.Id == 0 ? "Add" : "Edit") Maintenance Log</h2>
     </div>
     
     <div class="card-body p-4">
@@ -24,7 +24,7 @@
         }
 
         <form method="post" asp-action="AddEdit">
-            <input type="hidden" asp-for="LogId" />
+            <input type="hidden" asp-for="Id" />
             <input type="hidden" asp-for="Created" />
             <input type="hidden" asp-for="Modified" />
 

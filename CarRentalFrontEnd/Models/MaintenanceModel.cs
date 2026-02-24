@@ -2,7 +2,7 @@
 {
     public class MaintenanceModel
     {
-        public int LogId { get; set; }
+        public int Id { get; set; }
 
         public int VehicleId { get; set; }
 

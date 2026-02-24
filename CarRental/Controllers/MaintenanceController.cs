@@ -73,7 +73,7 @@ namespace CarRentalManagement.Controllers
                 try
                 {
                     await _context.SaveChangesAsync();
-                    return Ok(new { message = "Maintenance log added successfully.", logId = log.LogId });
+                    return Ok(new { message = "Maintenance log added successfully.", logId = log.Id });
                 }
                 catch (DbUpdateException)
                 {
@@ -91,7 +91,7 @@ namespace CarRentalManagement.Controllers
         {
             try
             {
-                if (id != log.LogId)
+                if (id != log.Id)
                 {
                     return BadRequest(new { message = "Maintenance log ID mismatch." });
                 }

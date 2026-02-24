@@ -74,7 +74,7 @@ builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 builder.Services.AddScoped<IValidator<User>, UserValidator>();
 
 builder.Services.AddDbContext<CarRentalContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionString")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Add CORS services
 builder.Services.AddCors(options =>
@@ -88,6 +88,12 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<CarRentalContext>();
+    db.Database.Migrate();
+}
 
 if (app.Environment.IsDevelopment())
 {

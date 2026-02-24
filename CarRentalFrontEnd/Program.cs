@@ -43,9 +43,11 @@ builder.Services.AddControllersWithViews(options =>
 });
 
 // Outbound API client (backend base URL)
-builder.Services.AddHttpClient("CarRentalAPI", client =>
+builder.Services.AddHttpClient("CarRentalAPI", (serviceProvider, client) =>
 {
-    client.BaseAddress = new Uri("http://localhost:5075/api/");
+    var config = serviceProvider.GetRequiredService<IConfiguration>();
+    var baseUrl = config["ApiSettings:BaseUrl"];
+    client.BaseAddress = new Uri(baseUrl);
 });
 
 // Session (stores JWT for API calls)

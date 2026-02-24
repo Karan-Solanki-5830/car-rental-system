@@ -31,7 +31,7 @@ namespace CarRentalFrontEnd
                 });
 
                 // POST to backend login endpoint
-                var response = await _httpClient.PostAsync("http://localhost:5075/api/User/login", formData);
+                var response = await _httpClient.PostAsync("User/login", formData);
                 var responseContent = await response.Content.ReadAsStringAsync();
 
                 if (!response.IsSuccessStatusCode)
@@ -111,7 +111,7 @@ namespace CarRentalFrontEnd
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
                 // POST to backend register endpoint
-                var response = await _httpClient.PostAsync("http://localhost:5075/api/User", content);
+                var response = await _httpClient.PostAsync("User", content);
                 var responseContent = await response.Content.ReadAsStringAsync();
 
                 if (!response.IsSuccessStatusCode)

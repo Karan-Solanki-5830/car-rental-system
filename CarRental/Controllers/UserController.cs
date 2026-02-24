@@ -118,8 +118,8 @@ namespace CarRental.API.Controllers
                     }
                 }
 
-                user.Created = DateTime.Now;
-                user.Modified = DateTime.Now;
+                user.Created = DateTime.UtcNow;
+                user.Modified = DateTime.UtcNow;
 
                 _context.Users.Add(user);
 
@@ -127,9 +127,9 @@ namespace CarRental.API.Controllers
                 {
                     await _context.SaveChangesAsync();
                 }
-                catch (DbUpdateException)
+                catch (DbUpdateException ex)
                 {
-                    return BadRequest(new { message = "Failed to create user due to database constraints." });
+                    return BadRequest(new { message = "Failed to create user due to database constraints.", detail = ex.InnerException?.Message ?? ex.Message });
                 }
 
                 if (user.Role.ToLower() == "customer")
@@ -199,7 +199,7 @@ namespace CarRental.API.Controllers
                 existingUser.Password = user.Password;
                 existingUser.Phone = user.Phone;
                 existingUser.Role = user.Role;
-                existingUser.Modified = DateTime.Now;
+                existingUser.Modified = DateTime.UtcNow;
 
                 try
                 {

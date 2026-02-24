@@ -89,6 +89,7 @@ namespace CarRental.API.Controllers
 
 
         // POST: api/User
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> PostUser([FromForm] User user, IFormFile? profileImage)
         {

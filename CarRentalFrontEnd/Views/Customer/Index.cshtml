@@ -36,40 +36,6 @@
                 </button>
             </div>
         </form>
-        <script>
-            function searchCustomers() {
-                const name = $('#name').val();
-                const email = $('#email').val();
-                const phone = $('#phone').val();
-                
-                $.ajax({
-                    url: '/Customer/Search',
-                    type: 'GET',
-                    data: { name, email, phone },
-                    beforeSend: function() {
-                        $('#customer-table-body').html('<tr><td colspan="3" class="text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></td></tr>');
-                    },
-                    success: function(data) {
-                        $('#customer-table-body').html(data);
-                    },
-                    error: function() {
-                        $('#customer-table-body').html('<tr><td colspan="3" class="text-center text-danger">Error loading customers. Please try again.</td></tr>');
-                    }
-                });
-            }
-
-            function clearFilters() {
-                $('#name, #email, #phone').val('');
-                searchCustomers();
-            }
-
-            // Search as you type with debounce
-            let searchTimer;
-            $('#name, #email, #phone').on('input', function() {
-                clearTimeout(searchTimer);
-                searchTimer = setTimeout(searchCustomers, 500);
-            });
-        </script>
 
         <div class="table-responsive">
             <table class="data-table">
@@ -119,24 +85,53 @@
 
 @section Scripts {
     <script>
+        function searchCustomers() {
+            const name = $('#name').val();
+            const email = $('#email').val();
+            const phone = $('#phone').val();
+            
+            $.ajax({
+                url: '/Customer/Search',
+                type: 'GET',
+                data: { name, email, phone },
+                beforeSend: function() {
+                    $('#customer-table-body').html('<tr><td colspan="3" class="text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></td></tr>');
+                    $('#loading-indicator').show();
+                },
+                success: function(data) {
+                    $('#customer-table-body').html(data);
+                },
+                error: function() {
+                    $('#customer-table-body').html('<tr><td colspan="3" class="text-center text-danger">Error loading customers. Please try again.</td></tr>');
+                },
+                complete: function() {
+                    $('#loading-indicator').hide();
+                }
+            });
+        }
+
+        function clearFilters() {
+            $('#name, #email, #phone').val('');
+            searchCustomers();
+        }
+
         $(function () {
+            // Search as you type with debounce
+            let searchTimer;
+            $('#name, #email, #phone').on('input', function() {
+                clearTimeout(searchTimer);
+                searchTimer = setTimeout(searchCustomers, 500);
+            });
+
             // Handle search form submission
             $('#customer-search-form').on('submit', function (e) {
                 e.preventDefault();
-                var query = $(this).serialize();
-                $('#loading-indicator').show();
-                $.get(`/Customer/Search?${query}`, function (data) {
-                    $('#customer-table-body').html(data);
-                }).always(function(){
-                    $('#loading-indicator').hide();
-                });
+                searchCustomers();
             });
 
             // Clear filters
             $('#customer-clear-filters').on('click', function(){
-                const form = $('#customer-search-form')[0];
-                form.reset();
-                $('#customer-search-form').trigger('submit');
+                clearFilters();
             });
         });
     </script>

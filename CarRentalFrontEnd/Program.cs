@@ -6,9 +6,17 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 var builder = WebApplication.CreateBuilder(args);
 
 // Core services
-builder.Services.AddHttpClient();
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<AuthService>();
+
+// Configure API Clients
+Action<IServiceProvider, HttpClient> configureClient = (sp, client) =>
+{
+    var baseUrl = sp.GetRequiredService<IConfiguration>()["ApiSettings:BaseUrl"];
+    if (!string.IsNullOrEmpty(baseUrl)) client.BaseAddress = new Uri(baseUrl);
+};
+
+builder.Services.AddHttpClient("CarRentalAPI", configureClient);
+builder.Services.AddHttpClient<AuthService>(configureClient);
 
 // Authentication: Cookie-based sign-in
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -42,14 +50,6 @@ builder.Services.AddControllersWithViews(options =>
     options.Filters.Add(new AuthorizeFilter(policy));
 });
 
-// Outbound API client (backend base URL)
-builder.Services.AddHttpClient("CarRentalAPI", (serviceProvider, client) =>
-{
-    var config = serviceProvider.GetRequiredService<IConfiguration>();
-    var baseUrl = config["ApiSettings:BaseUrl"];
-    client.BaseAddress = new Uri(baseUrl);
-});
-
 // Session (stores JWT for API calls)
 builder.Services.AddSession(options =>
 {
@@ -57,6 +57,9 @@ builder.Services.AddSession(options =>
 });
 
 var app = builder.Build();
+
+// Diagnostic log for production verification
+Console.WriteLine($"[DIAGNOSTIC] ApiSettings:BaseUrl is: {app.Configuration["ApiSettings:BaseUrl"]}");
 
 if (app.Environment.IsDevelopment())
 {

@@ -140,9 +140,9 @@ namespace CarRental.API.Controllers
                     {
                         await CreateOrUpdateCustomer(user);
                     }
-                    catch (DbUpdateException)
+                    catch (DbUpdateException ex)
                     {
-                        return BadRequest(new { message = "User created but failed to sync customer record due to database constraints." });
+                        return BadRequest(new { message = "User created but failed to sync customer record due to database constraints.", detail = ex.InnerException?.Message ?? ex.Message });
                     }
                 }
 

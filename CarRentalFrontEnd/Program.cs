@@ -58,9 +58,6 @@ builder.Services.AddSession(options =>
 
 var app = builder.Build();
 
-// Diagnostic log for production verification
-Console.WriteLine($"[DIAGNOSTIC] ApiSettings:BaseUrl is: {app.Configuration["ApiSettings:BaseUrl"]}");
-
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();

@@ -44,7 +44,7 @@ namespace CarRental.API.Controllers
                 issuer: jwtSettings["Issuer"],
                 audience: jwtSettings["Audience"],
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(expiryMinutes),
+                expires: DateTime.Now.AddMinutes(expiryMinutes),
                 signingCredentials: creds
             );
 
@@ -135,14 +135,13 @@ namespace CarRental.API.Controllers
 
                 if (user.Role.ToLower() == "customer")
                 {
-                    Console.WriteLine("Customer creation logic triggered.");
                     try
                     {
                         await CreateOrUpdateCustomer(user);
                     }
-                    catch (DbUpdateException ex)
+                    catch (DbUpdateException)
                     {
-                        return BadRequest(new { message = "User created but failed to sync customer record due to database constraints.", detail = ex.InnerException?.Message ?? ex.Message });
+                        return BadRequest(new { message = "User created but failed to sync customer record due to database constraints." });
                     }
                 }
 
@@ -316,30 +315,27 @@ namespace CarRental.API.Controllers
 
         private async Task CreateOrUpdateCustomer(User user)
         {
-            Console.WriteLine("Inside CreateOrUpdateCustomer with: " + user.Email);
 
             var existingCustomer = await _context.Customers
                 .FirstOrDefaultAsync(c => c.Email.ToLower() == user.Email.ToLower());
 
             if (existingCustomer == null)
             {
-                Console.WriteLine("Creating new customer...");
                 var newCustomer = new Customer
                 {
                     FullName = user.Name,
                     Email = user.Email,
                     Phone = user.Phone,
-                    Created = DateTime.UtcNow,
-                    Modified = DateTime.UtcNow
+                    Created = DateTime.Now,
+                    Modified = DateTime.Now
                 };
                 _context.Customers.Add(newCustomer);
             }
             else
             {
-                Console.WriteLine("Updating existing customer...");
                 existingCustomer.FullName = user.Name;
                 existingCustomer.Phone = user.Phone;
-                existingCustomer.Modified = DateTime.UtcNow;
+                existingCustomer.Modified = DateTime.Now;
             }
 
             await _context.SaveChangesAsync();

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace CarRentalFrontEnd.Controllers
 {
@@ -157,10 +158,22 @@ namespace CarRentalFrontEnd.Controllers
 
                 if (response.IsSuccessStatusCode)
                 {
-                    var json = await response.Content.ReadAsStringAsync();
-                    dynamic apiResult = JsonConvert.DeserializeObject<dynamic>(json);
-                    var customers = JsonConvert.DeserializeObject<List<CustomerModel>>(apiResult.customers.ToString());
-                    ViewBag.Customers = new SelectList(customers, "CustomerId", "FullName");
+                    var data = await response.Content.ReadAsStringAsync();
+                    
+                    try 
+                    {
+                        var apiResult = JsonConvert.DeserializeObject<JObject>(data);
+                        if (apiResult != null && apiResult["customers"] != null)
+                        {
+                            var customers = apiResult["customers"].ToObject<List<CustomerModel>>();
+                            ViewBag.Customers = new SelectList(customers ?? new List<CustomerModel>(), "CustomerId", "FullName");
+                            return;
+                        }
+                    }
+                    catch (JsonException) { /* Fallback */ }
+
+                    var simpleList = JsonConvert.DeserializeObject<List<CustomerModel>>(data);
+                    ViewBag.Customers = new SelectList(simpleList ?? new List<CustomerModel>(), "CustomerId", "FullName");
                 }
                 else
                 {

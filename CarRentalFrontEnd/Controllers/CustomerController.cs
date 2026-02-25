@@ -1,6 +1,7 @@
 using CarRentalFrontEnd.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace CarRentalFrontEnd.Controllers
 {
@@ -30,11 +31,24 @@ namespace CarRentalFrontEnd.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     var data = await response.Content.ReadAsStringAsync();
-                    dynamic apiResult = JsonConvert.DeserializeObject<dynamic>(data);
-                    var customers = JsonConvert.DeserializeObject<List<CustomerModel>>(apiResult.customers.ToString());
-                    ViewBag.TotalPages = (int)Math.Ceiling((double)apiResult.totalRecords / (int)apiResult.pageSize);
-                    ViewBag.CurrentPage = (int)apiResult.page;
-                    return View(customers);
+                    
+                    // Try to parse as the expected paged object
+                    try 
+                    {
+                        var apiResult = JsonConvert.DeserializeObject<JObject>(data);
+                        if (apiResult != null && apiResult["customers"] != null)
+                        {
+                            var customers = apiResult["customers"].ToObject<List<CustomerModel>>();
+                            ViewBag.TotalPages = (int)Math.Ceiling((double)(apiResult["totalRecords"]?.Value<int>() ?? 0) / (apiResult["pageSize"]?.Value<int>() ?? 10));
+                            ViewBag.CurrentPage = apiResult["page"]?.Value<int>() ?? 1;
+                            return View(customers ?? new List<CustomerModel>());
+                        }
+                    }
+                    catch (JsonException) { /* Fallback to simple list */ }
+
+                    // Fallback: try to parse as a direct list [{}, {}]
+                    var simpleList = JsonConvert.DeserializeObject<List<CustomerModel>>(data);
+                    return View(simpleList ?? new List<CustomerModel>());
                 }
 
                 TempData["ErrorMessage"] = "Failed to load customers.";

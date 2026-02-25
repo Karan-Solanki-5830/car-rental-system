@@ -81,8 +81,8 @@ namespace CarRentalManagement.Controllers
                     }));
                 }
 
-                booking.Created = DateTime.Now;
-                booking.Modified = DateTime.Now;
+                booking.Created = DateTime.UtcNow;
+                booking.Modified = DateTime.UtcNow;
 
                 _context.Bookings.Add(booking);
 
@@ -133,7 +133,7 @@ namespace CarRentalManagement.Controllers
                 existing.StartDateTime = booking.StartDateTime;
                 existing.EndDateTime = booking.EndDateTime;
                 existing.Status = booking.Status;
-                existing.Modified = DateTime.Now;
+                existing.Modified = DateTime.UtcNow;
 
                 _context.Bookings.Update(existing);
                 await _context.SaveChangesAsync();

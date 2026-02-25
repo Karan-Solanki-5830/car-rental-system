@@ -65,8 +65,8 @@ namespace CarRentalManagement.Controllers
                     }));
                 }
 
-                agreement.Created = DateTime.Now;
-                agreement.Modified = DateTime.Now;
+                agreement.Created = DateTime.UtcNow;
+                agreement.Modified = DateTime.UtcNow;
 
                 _context.Agreements.Add(agreement);
 
@@ -122,7 +122,7 @@ namespace CarRentalManagement.Controllers
                 existing.TermsAccepted = agreement.TermsAccepted;
                 existing.AgreementDate = agreement.AgreementDate;
                 existing.AgreementPdfpath = agreement.AgreementPdfpath;
-                existing.Modified = DateTime.Now;
+                existing.Modified = DateTime.UtcNow;
 
                 _context.Agreements.Update(existing);
                 await _context.SaveChangesAsync();

@@ -62,8 +62,8 @@ namespace CarRentalManagement.Controllers
                     }));
                 }
 
-                type.Created = DateTime.Now;
-                type.Modified = DateTime.Now;
+                type.Created = DateTime.UtcNow;
+                type.Modified = DateTime.UtcNow;
 
                 _context.VehicleTypes.Add(type);
 
@@ -108,7 +108,7 @@ namespace CarRentalManagement.Controllers
 
                 existing.TypeName = type.TypeName;
                 existing.UserId = type.UserId;
-                existing.Modified = DateTime.Now;
+                existing.Modified = DateTime.UtcNow;
 
                 try
                 {

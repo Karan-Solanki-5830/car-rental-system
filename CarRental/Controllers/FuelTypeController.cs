@@ -67,8 +67,8 @@ namespace CarRentalManagement.Controllers
                     }));
                 }
 
-                fuelType.Created = DateTime.Now;
-                fuelType.Modified = DateTime.Now;
+                fuelType.Created = DateTime.UtcNow;
+                fuelType.Modified = DateTime.UtcNow;
 
                 _context.FuelTypes.Add(fuelType);
 
@@ -120,7 +120,7 @@ namespace CarRentalManagement.Controllers
 
                 existingFuelType.FuelName = fuelType.FuelName;
                 existingFuelType.UserId = fuelType.UserId;
-                existingFuelType.Modified = DateTime.Now;
+                existingFuelType.Modified = DateTime.UtcNow;
 
                 await _context.SaveChangesAsync();
 

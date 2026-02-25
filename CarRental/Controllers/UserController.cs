@@ -44,7 +44,7 @@ namespace CarRental.API.Controllers
                 issuer: jwtSettings["Issuer"],
                 audience: jwtSettings["Audience"],
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(expiryMinutes),
+                expires: DateTime.UtcNow.AddMinutes(expiryMinutes),
                 signingCredentials: creds
             );
 
@@ -329,8 +329,8 @@ namespace CarRental.API.Controllers
                     FullName = user.Name,
                     Email = user.Email,
                     Phone = user.Phone,
-                    Created = DateTime.Now,
-                    Modified = DateTime.Now
+                    Created = DateTime.UtcNow,
+                    Modified = DateTime.UtcNow
                 };
                 _context.Customers.Add(newCustomer);
             }
@@ -339,7 +339,7 @@ namespace CarRental.API.Controllers
                 Console.WriteLine("Updating existing customer...");
                 existingCustomer.FullName = user.Name;
                 existingCustomer.Phone = user.Phone;
-                existingCustomer.Modified = DateTime.Now;
+                existingCustomer.Modified = DateTime.UtcNow;
             }
 
             await _context.SaveChangesAsync();

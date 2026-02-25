@@ -65,8 +65,8 @@ namespace CarRentalManagement.Controllers
                     }));
                 }
 
-                log.Created = DateTime.Now;
-                log.Modified = DateTime.Now;
+                log.Created = DateTime.UtcNow;
+                log.Modified = DateTime.UtcNow;
 
                 _context.MaintenanceLogs.Add(log);
 
@@ -117,7 +117,7 @@ namespace CarRentalManagement.Controllers
                 existing.Description = log.Description;
                 existing.ServiceDate = log.ServiceDate;
                 existing.Cost = log.Cost;
-                existing.Modified = DateTime.Now;
+                existing.Modified = DateTime.UtcNow;
 
                 _context.MaintenanceLogs.Update(existing);
                 await _context.SaveChangesAsync();

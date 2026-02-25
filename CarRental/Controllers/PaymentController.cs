@@ -66,8 +66,8 @@ namespace CarRentalManagement.Controllers
                     }));
                 }
 
-                payment.Created = DateTime.Now;
-                payment.Modified = DateTime.Now;
+                payment.Created = DateTime.UtcNow;
+                payment.Modified = DateTime.UtcNow;
 
                 _context.Payments.Add(payment);
 
@@ -120,7 +120,7 @@ namespace CarRentalManagement.Controllers
                 existing.PaymentDate = payment.PaymentDate;
                 existing.PaymentMethod = payment.PaymentMethod;
                 existing.Remarks = payment.Remarks;
-                existing.Modified = DateTime.Now;
+                existing.Modified = DateTime.UtcNow;
 
                 _context.Payments.Update(existing);
                 await _context.SaveChangesAsync();

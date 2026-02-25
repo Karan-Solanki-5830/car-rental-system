@@ -65,8 +65,8 @@ namespace CarRentalManagement.Controllers
                         Error = e.ErrorMessage
                     }));
 
-                vehicle.Created = DateTime.Now;
-                vehicle.Modified = DateTime.Now;
+                vehicle.Created = DateTime.UtcNow;
+                vehicle.Modified = DateTime.UtcNow;
 
                 _context.Vehicles.Add(vehicle);
 
@@ -119,7 +119,7 @@ namespace CarRentalManagement.Controllers
                 existing.ConditionNote = vehicle.ConditionNote;
                 existing.PricePerHour = vehicle.PricePerHour;
                 existing.PricePerDay = vehicle.PricePerDay;
-                existing.Modified = DateTime.Now;
+                existing.Modified = DateTime.UtcNow;
 
                 try
                 {

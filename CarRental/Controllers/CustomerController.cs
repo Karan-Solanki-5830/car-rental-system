@@ -22,6 +22,34 @@ namespace CarRental.API.Controllers
         {
             try
             {
+                // Auto-sync orphaned customers: Check for Users with role 'Customer' who aren't in the Customer table
+                var customerUsers = await _context.Users
+                    .Where(u => u.Role.ToLower() == "customer")
+                    .ToListAsync();
+
+                bool changesMade = false;
+                foreach (var user in customerUsers)
+                {
+                    var exists = await _context.Customers.AnyAsync(c => c.Email.ToLower() == user.Email.ToLower());
+                    if (!exists)
+                    {
+                        _context.Customers.Add(new Customer
+                        {
+                            FullName = user.Name,
+                            Email = user.Email,
+                            Phone = user.Phone,
+                            Created = DateTime.UtcNow,
+                            Modified = DateTime.UtcNow
+                        });
+                        changesMade = true;
+                    }
+                }
+
+                if (changesMade)
+                {
+                    await _context.SaveChangesAsync();
+                }
+
                 var totalRecords = await _context.Customers.CountAsync();
 
                 var customersWithRoles = await _context.Customers

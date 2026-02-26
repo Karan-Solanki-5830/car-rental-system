@@ -48,15 +48,27 @@ namespace CarRentalFrontEnd.Controllers
 
                 response.EnsureSuccessStatusCode();
                 var json = await response.Content.ReadAsStringAsync();
-                var list = JsonConvert.DeserializeObject<List<UserModel>>(json);
-
-
+                
+                List<UserModel> list = new List<UserModel>();
+                try
+                {
+                    var obj = Newtonsoft.Json.Linq.JObject.Parse(json);
+                    if (obj["$values"] != null) 
+                        list = obj["$values"].ToObject<List<UserModel>>() ?? new List<UserModel>();
+                    else if (obj["data"] != null)
+                        list = obj["data"].ToObject<List<UserModel>>() ?? new List<UserModel>();
+                }
+                catch 
+                {
+                    // Fallback to simple array
+                    list = JsonConvert.DeserializeObject<List<UserModel>>(json) ?? new List<UserModel>();
+                }
 
                 return View(list);
             }
-            catch
+            catch (Exception ex)
             {
-                TempData["Error"] = "Unable to load users.";
+                TempData["ErrorMessage"] = "Unable to load users.";
                 return View(new List<UserModel>());
             }
         }

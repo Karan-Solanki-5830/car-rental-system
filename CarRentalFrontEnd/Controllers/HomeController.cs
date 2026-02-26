@@ -51,8 +51,8 @@ namespace CarRentalFrontEnd.Controllers
             // Standardize endpoints to match backend controller names (PascalCase often preferred or case-insensitive)
             var userCountTask = SafeGetCount("User/count");
             var customerCountTask = SafeGetCount("Customer/count");
-            var vehicleTask = SafeGetString("Vehicle");
-            var bookingTask = SafeGetString("Booking");
+            var vehicleTask = SafeGetString("Vehicle?pageSize=10000");
+            var bookingTask = SafeGetString("Booking?pageSize=10000");
 
             await Task.WhenAll(userCountTask, customerCountTask, vehicleTask, bookingTask);
 
@@ -61,10 +61,26 @@ namespace CarRentalFrontEnd.Controllers
             var customerCount = await customerCountTask;
             
             var vehicleJson = await vehicleTask;
-            var vehicles = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Models.VehicleModel>>(vehicleJson) ?? new List<Models.VehicleModel>();
-            
             var bookingJson = await bookingTask;
-            var bookings = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Models.BookingModel>>(bookingJson) ?? new List<Models.BookingModel>();
+
+            List<T> ParseList<T>(string json, string arrayKey)
+            {
+                if (string.IsNullOrWhiteSpace(json) || json == "[]") return new List<T>();
+                try
+                {
+                    var obj = JObject.Parse(json);
+                    if (obj[arrayKey] != null) return obj[arrayKey].ToObject<List<T>>() ?? new List<T>();
+                    if (obj["$values"] != null) return obj["$values"].ToObject<List<T>>() ?? new List<T>();
+                    if (obj["data"] != null) return obj["data"].ToObject<List<T>>() ?? new List<T>();
+                }
+                catch { }
+
+                try { return Newtonsoft.Json.JsonConvert.DeserializeObject<List<T>>(json) ?? new List<T>(); }
+                catch { return new List<T>(); }
+            }
+
+            var vehicles = ParseList<Models.VehicleModel>(vehicleJson, "vehicles");
+            var bookings = ParseList<Models.BookingModel>(bookingJson, "bookings");
 
             // --- Process Data ---
             var vehicleCount = vehicles.Count;

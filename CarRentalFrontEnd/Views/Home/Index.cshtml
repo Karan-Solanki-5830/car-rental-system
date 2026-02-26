@@ -208,10 +208,11 @@
                 vehicles.forEach(item => {
                     const vehicle = item.Vehicle || item.vehicle || {};
                     const count = item.Count || item.count || 0;
-                    if (vehicle.model) {
+                    const modelName = vehicle.model || vehicle.Model;
+                    if (modelName) {
                         list.innerHTML += `
                             <div class="vehicle-item">
-                                <span class="vehicle-name">${vehicle.model}</span>
+                                <span class="vehicle-name">${modelName}</span>
                                 <span class="booking-count">${count} booking${count !== 1 ? 's' : ''}</span>
                             </div>`;
                     }
